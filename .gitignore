@@ -1,0 +1,5 @@
+*.sql
+html/*
+mysql-data/*
+uploads/*
+.env
