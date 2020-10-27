@@ -1,0 +1,36 @@
+version: "3.7"
+services:
+  web-server:
+    build:
+      dockerfile: php.Dockerfile
+      context: .
+    restart: always
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PWD: ${DB_PWD}
+      DB_HOST: ${DB_HOST}
+      DB_DB: ${DB_DB}
+    volumes:
+      - "./html/:/var/www/html/"
+    ports:
+      - "8280:80"
+  mysql-server:
+    image: mysql:8.0.22
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DB}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PWD}
+    volumes:
+      - ./mysql-data/:/var/lib/mysql/
+# add mysql dump to populate the database
+#     - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.1
+    restart: always
+    environment:
+      PMA_HOST: ${DB_HOST}
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "5000:80"
